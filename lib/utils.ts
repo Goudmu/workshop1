@@ -30,3 +30,12 @@ export function commafy(num: number) {
   }
   return str.join(",");
 }
+
+export function IDRFormat(num: number) {
+  const converted = new Intl.NumberFormat("id", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0,
+  }).format(num);
+  return converted;
+}
