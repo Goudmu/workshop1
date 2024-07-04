@@ -261,10 +261,6 @@ export default function WorksheetTableComponent() {
                       }
                     });
                   });
-                  if (dataAccount.accountID.substring(0, 4) == "3100") {
-                    console.log(debitGLAmount);
-                    console.log(creditGLAmount);
-                  }
                   adjustEntries.map((dataAdjustLedger) => {
                     dataAdjustLedger.debits.map((dataAdjustLedgerDebit) => {
                       if (dataAccount._id == dataAdjustLedgerDebit.account_id) {
@@ -397,7 +393,7 @@ export default function WorksheetTableComponent() {
                         }).format(
                           ["1"].includes(
                             dataAccount.accountID.substring(0, 1)
-                          ) || dataAccount.accountID === "3200"
+                          ) || dataAccount.accountID === "3300"
                             ? debitGLAmount - creditGLAmount
                             : 0
                         )}
@@ -408,12 +404,12 @@ export default function WorksheetTableComponent() {
                           currency: "IDR",
                           maximumFractionDigits: 0,
                         }).format(
-                          dataAccount.accountID == "3300"
+                          dataAccount.accountID == "3200"
                             ? totalCreditRetainedEarning
                             : ["2", "3"].includes(
                                 dataAccount.accountID.substring(0, 1)
                               )
-                            ? dataAccount.accountID == "3200"
+                            ? dataAccount.accountID == "3300"
                               ? 0
                               : creditGLAmount - debitGLAmount
                             : 0
@@ -503,6 +499,62 @@ export default function WorksheetTableComponent() {
                     maximumFractionDigits: 0,
                   }).format(totalCreditNeraca)}
                 </TableCell>
+              </TableRow>
+              <TableRow>
+                {/* Report RL */}
+                {totalCreditReportRL - totalDebitReportRL > 0 ? (
+                  <>
+                    <TableCell
+                      colSpan={6}
+                      className="py-1 border px-1 text-right"
+                    >
+                      Profit
+                    </TableCell>
+                    <TableCell className="py-1 border px-1 text-center">
+                      {new Intl.NumberFormat("id", {
+                        style: "currency",
+                        currency: "IDR",
+                        maximumFractionDigits: 0,
+                      }).format(totalCreditReportRL - totalDebitReportRL)}
+                    </TableCell>
+                    <TableCell className="py-1 border px-1 text-center">
+                      {new Intl.NumberFormat("id", {
+                        style: "currency",
+                        currency: "IDR",
+                        maximumFractionDigits: 0,
+                      }).format(0)}
+                    </TableCell>
+                  </>
+                ) : (
+                  <>
+                    <TableCell
+                      colSpan={6}
+                      className="py-1 border px-1 text-right"
+                    >
+                      Loss
+                    </TableCell>
+                    <TableCell className="py-1 border px-1 text-center">
+                      {new Intl.NumberFormat("id", {
+                        style: "currency",
+                        currency: "IDR",
+                        maximumFractionDigits: 0,
+                      }).format(0)}
+                    </TableCell>
+                    <TableCell className="py-1 border px-1 text-center">
+                      {new Intl.NumberFormat("id", {
+                        style: "currency",
+                        currency: "IDR",
+                        maximumFractionDigits: 0,
+                      }).format(totalDebitReportRL - totalCreditReportRL)}
+                    </TableCell>
+                  </>
+                )}
+                {/* Closing Ledger */}
+                <TableCell className="py-1 border px-1 text-center"></TableCell>
+                <TableCell className="py-1 border px-1 text-center"></TableCell>
+                {/* NERACA */}
+                <TableCell className="py-1 border px-1 text-center"></TableCell>
+                <TableCell className="py-1 border px-1 text-center"></TableCell>
               </TableRow>
             </TableFooter>
           </Table>
