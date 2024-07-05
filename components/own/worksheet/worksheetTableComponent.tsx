@@ -69,8 +69,6 @@ export default function WorksheetTableComponent() {
   };
 
   const getDataGeneralLedger = async () => {
-    console.log(startDate);
-    console.log(endDate);
     let newtotalDebitledgerEntries = 0;
     let newtotalCreditledgerEntries = 0;
     let newtotalDebitadjustEntries = 0;
@@ -257,57 +255,57 @@ export default function WorksheetTableComponent() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className=" w-[10%]">Account ID</TableHead>
-                  <TableHead className=" w-[10%]">Name Account</TableHead>
-                  <TableHead className="text-center w-[18%]" colSpan={2}>
+                  <TableHead className=" w-[3%]">Account ID</TableHead>
+                  <TableHead className=" w-[7%]">Name Account</TableHead>
+                  <TableHead className="text-center w-[19%]" colSpan={2}>
                     Jurnal Umum
                   </TableHead>
-                  <TableHead className="text-center w-[18%]" colSpan={2}>
+                  <TableHead className="text-center w-[19%]" colSpan={2}>
                     Jurnal Penyesuaian
                   </TableHead>
-                  <TableHead className="text-center w-[18%]" colSpan={2}>
+                  <TableHead className="text-center w-[19%]" colSpan={2}>
                     Laporan Laba Rugi
                   </TableHead>
-                  <TableHead className="text-center w-[18%]" colSpan={2}>
+                  <TableHead className="text-center w-[19%]" colSpan={2}>
                     Laporan Penutup
                   </TableHead>
-                  <TableHead className="text-center w-[18%]" colSpan={2}>
+                  <TableHead className="text-center w-[19%]" colSpan={2}>
                     Neraca
                   </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 <TableRow>
-                  <TableCell className=" text-center py-1 border"></TableCell>
-                  <TableCell className=" text-center py-1 border"></TableCell>
-                  <TableCell className=" text-center py-1 border">
+                  <TableCell className=" text-center py-1 border text-xs md:text-sm"></TableCell>
+                  <TableCell className=" text-center py-1 border text-xs md:text-sm"></TableCell>
+                  <TableCell className=" text-center py-1 border text-xs md:text-sm">
                     Debit
                   </TableCell>
-                  <TableCell className=" text-center py-1 border">
+                  <TableCell className=" text-center py-1 border text-xs md:text-sm">
                     Credit
                   </TableCell>
-                  <TableCell className=" text-center py-1 border">
+                  <TableCell className=" text-center py-1 border text-xs md:text-sm">
                     Debit
                   </TableCell>
-                  <TableCell className=" text-center py-1 border">
+                  <TableCell className=" text-center py-1 border text-xs md:text-sm">
                     Credit
                   </TableCell>
-                  <TableCell className=" text-center py-1 border">
+                  <TableCell className=" text-center py-1 border text-xs md:text-sm">
                     Debit
                   </TableCell>
-                  <TableCell className=" text-center py-1 border">
+                  <TableCell className=" text-center py-1 border text-xs md:text-sm">
                     Credit
                   </TableCell>
-                  <TableCell className=" text-center py-1 border">
+                  <TableCell className=" text-center py-1 border text-xs md:text-sm">
                     Debit
                   </TableCell>
-                  <TableCell className=" text-center py-1 border">
+                  <TableCell className=" text-center py-1 border text-xs md:text-sm">
                     Credit
                   </TableCell>
-                  <TableCell className=" text-center py-1 border">
+                  <TableCell className=" text-center py-1 border text-xs md:text-sm">
                     Debit
                   </TableCell>
-                  <TableCell className=" text-center py-1 border">
+                  <TableCell className=" text-center py-1 border text-xs md:text-sm">
                     Credit
                   </TableCell>
                 </TableRow>
@@ -370,21 +368,21 @@ export default function WorksheetTableComponent() {
 
                     return (
                       <TableRow key={index}>
-                        <TableCell className="py-1 border">
+                        <TableCell className="py-1 border text-xs md:text-sm">
                           {dataAccount.accountID}
                         </TableCell>
-                        <TableCell className="py-1 border">
+                        <TableCell className="py-1 border text-xs md:text-sm">
                           {capitalizeFirstLetter(dataAccount.name)}
                         </TableCell>
                         {/* GENERAL LEDGER */}
-                        <TableCell className="py-1 border px-1 text-center">
+                        <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                           {new Intl.NumberFormat("id", {
                             style: "currency",
                             currency: "IDR",
                             maximumFractionDigits: 0,
                           }).format(debitGLAmount)}
                         </TableCell>
-                        <TableCell className="py-1 border px-1 text-center">
+                        <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                           {new Intl.NumberFormat("id", {
                             style: "currency",
                             currency: "IDR",
@@ -392,14 +390,14 @@ export default function WorksheetTableComponent() {
                           }).format(creditGLAmount)}
                         </TableCell>
                         {/* ADJUST LEDGER */}
-                        <TableCell className="py-1 border px-1 text-center">
+                        <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                           {new Intl.NumberFormat("id", {
                             style: "currency",
                             currency: "IDR",
                             maximumFractionDigits: 0,
                           }).format(debitAdjustAmount)}
                         </TableCell>
-                        <TableCell className="py-1 border px-1 text-center">
+                        <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                           {new Intl.NumberFormat("id", {
                             style: "currency",
                             currency: "IDR",
@@ -407,7 +405,7 @@ export default function WorksheetTableComponent() {
                           }).format(creditAdjustAmount)}
                         </TableCell>
                         {/* REPORT REVENUE OR LOSS */}
-                        <TableCell className="py-1 border px-1 text-center">
+                        <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                           {new Intl.NumberFormat("id", {
                             style: "currency",
                             currency: "IDR",
@@ -420,7 +418,7 @@ export default function WorksheetTableComponent() {
                               : 0
                           )}
                         </TableCell>
-                        <TableCell className="py-1 border px-1 text-center">
+                        <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                           {new Intl.NumberFormat("id", {
                             style: "currency",
                             currency: "IDR",
@@ -434,7 +432,7 @@ export default function WorksheetTableComponent() {
                           )}
                         </TableCell>
                         {/* CLOSING LEDGER */}
-                        <TableCell className="py-1 border px-1 text-center">
+                        <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                           {new Intl.NumberFormat("id", {
                             style: "currency",
                             currency: "IDR",
@@ -447,7 +445,7 @@ export default function WorksheetTableComponent() {
                               : 0
                           )}
                         </TableCell>
-                        <TableCell className="py-1 border px-1 text-center">
+                        <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                           {new Intl.NumberFormat("id", {
                             style: "currency",
                             currency: "IDR",
@@ -461,7 +459,7 @@ export default function WorksheetTableComponent() {
                           )}
                         </TableCell>
                         {/* NERACA */}
-                        <TableCell className="py-1 border px-1 text-center">
+                        <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                           {new Intl.NumberFormat("id", {
                             style: "currency",
                             currency: "IDR",
@@ -474,7 +472,7 @@ export default function WorksheetTableComponent() {
                               : 0
                           )}
                         </TableCell>
-                        <TableCell className="py-1 border px-1 text-center">
+                        <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                           {new Intl.NumberFormat("id", {
                             style: "currency",
                             currency: "IDR",
@@ -499,19 +497,19 @@ export default function WorksheetTableComponent() {
                 <TableRow>
                   <TableCell
                     colSpan={2}
-                    className="py-1 border px-1 text-right"
+                    className="py-1 border text-xs md:text-sm px-1 text-right"
                   >
                     TOTAL
                   </TableCell>
                   {/* General Ledger */}
-                  <TableCell className="py-1 border px-1 text-center">
+                  <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                     {new Intl.NumberFormat("id", {
                       style: "currency",
                       currency: "IDR",
                       maximumFractionDigits: 0,
                     }).format(totalDebitledgerEntries)}
                   </TableCell>
-                  <TableCell className="py-1 border px-1 text-center">
+                  <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                     {new Intl.NumberFormat("id", {
                       style: "currency",
                       currency: "IDR",
@@ -519,14 +517,14 @@ export default function WorksheetTableComponent() {
                     }).format(totalCreditledgerEntries)}
                   </TableCell>
                   {/* Adjusting Ledger */}
-                  <TableCell className="py-1 border px-1 text-center">
+                  <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                     {new Intl.NumberFormat("id", {
                       style: "currency",
                       currency: "IDR",
                       maximumFractionDigits: 0,
                     }).format(totalDebitledgerAdjust)}
                   </TableCell>
-                  <TableCell className="py-1 border px-1 text-center">
+                  <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                     {new Intl.NumberFormat("id", {
                       style: "currency",
                       currency: "IDR",
@@ -534,14 +532,14 @@ export default function WorksheetTableComponent() {
                     }).format(totalCreditledgerAdjust)}
                   </TableCell>
                   {/* Report RL */}
-                  <TableCell className="py-1 border px-1 text-center">
+                  <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                     {new Intl.NumberFormat("id", {
                       style: "currency",
                       currency: "IDR",
                       maximumFractionDigits: 0,
                     }).format(totalDebitReportRL)}
                   </TableCell>
-                  <TableCell className="py-1 border px-1 text-center">
+                  <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                     {new Intl.NumberFormat("id", {
                       style: "currency",
                       currency: "IDR",
@@ -549,14 +547,14 @@ export default function WorksheetTableComponent() {
                     }).format(totalCreditReportRL)}
                   </TableCell>
                   {/* Closing Ledger */}
-                  <TableCell className="py-1 border px-1 text-center">
+                  <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                     {new Intl.NumberFormat("id", {
                       style: "currency",
                       currency: "IDR",
                       maximumFractionDigits: 0,
                     }).format(totalDebitledgerClosing)}
                   </TableCell>
-                  <TableCell className="py-1 border px-1 text-center">
+                  <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                     {new Intl.NumberFormat("id", {
                       style: "currency",
                       currency: "IDR",
@@ -564,14 +562,14 @@ export default function WorksheetTableComponent() {
                     }).format(totalCreditledgerClosing)}
                   </TableCell>
                   {/* NERACA */}
-                  <TableCell className="py-1 border px-1 text-center">
+                  <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                     {new Intl.NumberFormat("id", {
                       style: "currency",
                       currency: "IDR",
                       maximumFractionDigits: 0,
                     }).format(totalDebitNeraca)}
                   </TableCell>
-                  <TableCell className="py-1 border px-1 text-center">
+                  <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                     {new Intl.NumberFormat("id", {
                       style: "currency",
                       currency: "IDR",
@@ -585,18 +583,18 @@ export default function WorksheetTableComponent() {
                     <>
                       <TableCell
                         colSpan={6}
-                        className="py-1 border px-1 text-right"
+                        className="py-1 border text-xs md:text-sm px-1 text-right"
                       >
                         Profit
                       </TableCell>
-                      <TableCell className="py-1 border px-1 text-center">
+                      <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                         {new Intl.NumberFormat("id", {
                           style: "currency",
                           currency: "IDR",
                           maximumFractionDigits: 0,
                         }).format(totalCreditReportRL - totalDebitReportRL)}
                       </TableCell>
-                      <TableCell className="py-1 border px-1 text-center">
+                      <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                         {new Intl.NumberFormat("id", {
                           style: "currency",
                           currency: "IDR",
@@ -608,18 +606,18 @@ export default function WorksheetTableComponent() {
                     <>
                       <TableCell
                         colSpan={6}
-                        className="py-1 border px-1 text-right"
+                        className="py-1 border text-xs md:text-sm px-1 text-right"
                       >
                         Loss
                       </TableCell>
-                      <TableCell className="py-1 border px-1 text-center">
+                      <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                         {new Intl.NumberFormat("id", {
                           style: "currency",
                           currency: "IDR",
                           maximumFractionDigits: 0,
                         }).format(0)}
                       </TableCell>
-                      <TableCell className="py-1 border px-1 text-center">
+                      <TableCell className="py-1 border text-xs md:text-sm px-1 text-center">
                         {new Intl.NumberFormat("id", {
                           style: "currency",
                           currency: "IDR",
@@ -629,11 +627,11 @@ export default function WorksheetTableComponent() {
                     </>
                   )}
                   {/* Closing Ledger */}
-                  <TableCell className="py-1 border px-1 text-center"></TableCell>
-                  <TableCell className="py-1 border px-1 text-center"></TableCell>
+                  <TableCell className="py-1 border text-xs md:text-sm px-1 text-center"></TableCell>
+                  <TableCell className="py-1 border text-xs md:text-sm px-1 text-center"></TableCell>
                   {/* NERACA */}
-                  <TableCell className="py-1 border px-1 text-center"></TableCell>
-                  <TableCell className="py-1 border px-1 text-center"></TableCell>
+                  <TableCell className="py-1 border text-xs md:text-sm px-1 text-center"></TableCell>
+                  <TableCell className="py-1 border text-xs md:text-sm px-1 text-center"></TableCell>
                 </TableRow>
               </TableFooter>
             </Table>

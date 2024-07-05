@@ -3,7 +3,7 @@ import { exec } from "child_process";
 import fs from "fs";
 import path from "path";
 import { promisify } from "util";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export interface BackUpFileInfo {
   name: string;
@@ -32,10 +32,9 @@ if (!fs.existsSync(BACKUP_DIR)) {
 
 export async function POST() {
   const date = new Date().toISOString().slice(0, 10);
-  const backupPath = path.join(BACKUP_DIR, `${DB_NAME}-${date}.gz`);
 
   // Construct the mongodump command
-  const command = `mongodump --uri="${MONGODB_URI}" --gzip --archive=${backupPath}`;
+  const command = `mongodump --uri="${MONGODB_URI}" --gzip --archive=./backups/${DB_NAME}-${date}.gz`;
 
   // Execute the command
   await execAsync(command);
@@ -44,8 +43,7 @@ export async function POST() {
 }
 
 export async function GET() {
-  const folderPath =
-    "C:/Users/goudm/OneDrive/Documents/JS/project18workshop/workshop1/backups/";
+  const folderPath = "./backups/";
   try {
     const filesInfo: BackUpFileInfo[] = [];
 
@@ -65,10 +63,31 @@ export async function GET() {
       filesInfo.push(BackUpFileInfo);
     });
 
-    console.log(filesInfo);
-
     return NextResponse.json({ filesInfo });
   } catch (error) {
     console.error("Error reading directory:", error);
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  const folderPath = "./backups/";
+  const { name } = await req.json();
+
+  if (!name) {
+    return NextResponse.json({ message: "File name is required" });
+  }
+
+  const filePath = path.join(folderPath, name);
+
+  try {
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+      return NextResponse.json({ message: "File deleted successfully" });
+    } else {
+      return NextResponse.json({ message: "File not found" });
+    }
+  } catch (error) {
+    console.error("Error deleting file:", error);
+    return NextResponse.json({ message: "Error deleting file" });
   }
 }

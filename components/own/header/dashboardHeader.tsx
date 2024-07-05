@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -18,8 +17,6 @@ const MenuList = [
   { name: "Items", link: "/item" },
   { name: "Jurnal Umum", link: "/jurnalumum" },
   { name: "Jurnal Penyesuaian", link: "/jurnalpenyesuaian" },
-  { name: "Jurnal Penutup", link: "/jurnalpenutup" },
-  { name: "AIS with AI (New)", link: "/ais" },
   { name: "Akun Akuntansi", link: "/accounts" },
   { name: "Worksheet", link: "/worksheet" },
   { name: "Report", link: "/report" },

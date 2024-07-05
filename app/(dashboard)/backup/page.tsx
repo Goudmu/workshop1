@@ -1,5 +1,6 @@
 "use client";
 import { BackUpFileInfo } from "@/app/api/backup/route";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -18,7 +19,6 @@ const BackupPage = () => {
     const res = await fetch("/api/backup", { cache: "no-store" });
     const { filesInfo } = await res.json();
     setBackups(filesInfo);
-    console.log(filesInfo);
   };
 
   const handleBackup = async () => {
@@ -35,9 +35,24 @@ const BackupPage = () => {
       }
 
       const { message } = await response.json();
+      getBackupsData();
       setMessage(`Backup successful: ${message}`);
     } catch (error: any) {
       setMessage(`Backup failed: ${error.message}`);
+    }
+  };
+
+  const deleteHandler = async (file: BackUpFileInfo) => {
+    try {
+      const res = await fetch("/api/backup", {
+        method: "DELETE",
+        body: JSON.stringify(file),
+      });
+      if (res.ok) {
+        getBackupsData();
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -59,6 +74,8 @@ const BackupPage = () => {
               <TableHead className="hidden md:table-cell">Full Path</TableHead>
               <TableHead className="text-right">Size</TableHead>
               <TableHead className="hidden md:table-cell">Created At</TableHead>
+              <TableHead className="hidden md:table-cell">Restore</TableHead>
+              <TableHead className="hidden md:table-cell">Delete</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -73,6 +90,18 @@ const BackupPage = () => {
                 </TableCell>
                 <TableCell className="hidden md:table-cell text-muted-foreground">
                   {new Date(file.createdAt).toLocaleString()}
+                </TableCell>
+                <TableCell className="hidden md:table-cell text-muted-foreground">
+                  <Button size="sm">Restore</Button>
+                </TableCell>
+                <TableCell className="hidden md:table-cell text-muted-foreground">
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => deleteHandler(file)}
+                  >
+                    Delete
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
