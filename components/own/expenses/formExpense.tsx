@@ -65,7 +65,7 @@ const FormExpenses = ({
 
     const newGeneralLedger = {
       dateGL: new Date(),
-      descGL: "Buying Items",
+      descGL: `Cost Expense for ${expenseAccount.name}`,
       creditsGL: [
         {
           accountName: cashAccount.name,

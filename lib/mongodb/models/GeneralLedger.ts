@@ -8,6 +8,7 @@ export interface IEntry {
 }
 
 export interface IGeneralLedger extends Document {
+  _id: string | undefined;
   date: Date;
   description: string;
   debits: IEntry[];
