@@ -22,21 +22,10 @@ import { IAccount } from "@/lib/mongodb/models/Account";
 import { IGeneralLedger } from "@/lib/mongodb/models/GeneralLedger";
 import { Button } from "@/components/ui/button";
 import { CalendarDaysIcon } from "lucide-react";
-import { GetWorksheetData } from "@/lib/mongodb/actions/worksheetAction";
 
 export default function WorksheetTableComponent() {
-  const [startDate, setStartDate] = useState<Date | undefined>(() => {
-    const now = new Date();
-    const endOfDay = new Date(now);
-    endOfDay.setHours(0, 0, 0, 1);
-    return endOfDay;
-  });
-  const [endDate, setEndDate] = useState<Date | undefined>(() => {
-    const now = new Date();
-    const endOfDay = new Date(now);
-    endOfDay.setHours(23, 59, 59, 59);
-    return endOfDay;
-  });
+  const [startDate, setStartDate] = useState<Date | undefined>(new Date());
+  const [endDate, setEndDate] = useState<Date | undefined>(new Date());
   const [accounts, setAccounts] = useState<IAccount[]>([]);
   const [ledgerEntries, setledgerEntries] = useState<IGeneralLedger[]>([]);
   const [adjustEntries, setadjustEntries] = useState<IGeneralLedger[]>([]);
@@ -69,8 +58,6 @@ export default function WorksheetTableComponent() {
   };
 
   const getDataGeneralLedger = async () => {
-    console.log(startDate);
-    console.log(endDate);
     let newtotalDebitledgerEntries = 0;
     let newtotalCreditledgerEntries = 0;
     let newtotalDebitadjustEntries = 0;
@@ -82,8 +69,9 @@ export default function WorksheetTableComponent() {
     let newtotalDebitNeraca = 0;
     let newtotalCreditNeraca = 0;
 
-    const { generalLedger, accounts, adjustLedger, closingLedger }: any =
-      await GetWorksheetData({ startDate, endDate });
+    const res = await fetch("/api/worksheet", { cache: "no-store" });
+    const { generalLedger, accounts, adjustLedger, closingLedger } =
+      await res.json();
 
     // GENERAL LEDGER
     generalLedger.map((dataLedger: IGeneralLedger) => {
@@ -157,7 +145,7 @@ export default function WorksheetTableComponent() {
     closingLedger.map((dataClosingLedger: IGeneralLedger) => {
       dataClosingLedger.debits.map((dataDebit) => {
         accounts.map((dataAccount: IAccount) => {
-          if (dataDebit.accountID == dataAccount.accountID) {
+          if (dataDebit.accountID == dataAccount._id) {
             if (
               ["4", "5", "3"].includes(dataAccount.accountID.substring(0, 1))
             ) {
@@ -168,7 +156,7 @@ export default function WorksheetTableComponent() {
       });
       dataClosingLedger.credits.map((dataCredit) => {
         accounts.map((dataAccount: IAccount) => {
-          if (dataCredit.accountID == dataAccount.accountID) {
+          if (dataCredit.accountID == dataAccount._id) {
             if (
               ["4", "5", "3"].includes(dataAccount.accountID.substring(0, 1))
             ) {
@@ -246,7 +234,7 @@ export default function WorksheetTableComponent() {
             />
           </PopoverContent>
         </Popover>
-        <Button onClick={getDataGeneralLedger}>Filter</Button>
+        <Button>Filter</Button>
       </div>
       <div>
         <Card>

@@ -26,8 +26,18 @@ import { Calendar } from "@/components/ui/calendar";
 import { GetGeneralLedgerData } from "@/lib/mongodb/actions/generalLedgerAction";
 
 export default function TableJurnalUmum() {
-  const [startDate, setStartDate] = useState<Date | undefined>(new Date());
-  const [endDate, setEndDate] = useState<Date | undefined>(new Date());
+  const [startDate, setStartDate] = useState<Date | undefined>(() => {
+    const now = new Date();
+    const endOfDay = new Date(now);
+    endOfDay.setHours(0, 0, 0, 1);
+    return endOfDay;
+  });
+  const [endDate, setEndDate] = useState<Date | undefined>(() => {
+    const now = new Date();
+    const endOfDay = new Date(now);
+    endOfDay.setHours(23, 59, 59, 59);
+    return endOfDay;
+  });
   const [ledgerEntries, setledgerEntries] = useState<IGeneralLedger[]>([]);
   const [trigger, setTrigger] = useState(false);
 
