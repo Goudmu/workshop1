@@ -1,8 +1,8 @@
-import path from "path";
+import { NextApiResponse } from "next";
+import { exec } from "child_process";
 import fs from "fs";
-import { MongoClient } from "mongodb";
-import archiver from "archiver";
-import zlib from "zlib";
+import path from "path";
+import { promisify } from "util";
 import { NextRequest, NextResponse } from "next/server";
 
 export interface BackUpFileInfo {
@@ -17,6 +17,7 @@ const DB_NAME = process.env.DB_NAME || "mydatabase";
 const MONGODB_URI = process.env.MONGODB_URI2 || "";
 const USERNAME = process.env.MONGODB_USERNAME || "";
 const PASSWORD = process.env.MONGODB_PASSWORD || "";
+const execAsync = promisify(exec);
 
 if (!MONGODB_URI || !USERNAME || !PASSWORD) {
   throw new Error(
@@ -29,59 +30,16 @@ if (!fs.existsSync(BACKUP_DIR)) {
   fs.mkdirSync(BACKUP_DIR);
 }
 
-interface CollectionsData {
-  [key: string]: any[]; // Assuming all collections have arrays of any type of documents
-}
-
 export async function POST() {
   const date = new Date().toISOString().slice(0, 10);
-  const backupPath = path.join(BACKUP_DIR, `${DB_NAME}-${date}.gz`);
 
-  const client = new MongoClient(MONGODB_URI);
+  // Construct the mongodump command
+  const command = `mongodump --uri="${MONGODB_URI}" --gzip --archive=./backups/${DB_NAME}-${date}.gz`;
 
-  try {
-    await client.connect();
-    const db = client.db(DB_NAME);
-    const collections = await db.collections();
+  // Execute the command
+  await execAsync(command);
 
-    const output = fs.createWriteStream(backupPath);
-    const gzip = zlib.createGzip();
-
-    output.on("close", () => {
-      console.log(
-        `Backup file size: ${(
-          fs.statSync(backupPath).size /
-          (1024 * 1024)
-        ).toFixed(2)} MB`
-      );
-      console.log("Backup created successfully");
-    });
-
-    gzip.on("error", (err) => {
-      throw err;
-    });
-
-    gzip.pipe(output);
-
-    const collectionsData: CollectionsData = {};
-
-    for (const collection of collections) {
-      const documents = await collection.find({}).toArray();
-      collectionsData[collection.collectionName] = documents;
-    }
-
-    const jsonBackupData = JSON.stringify(collectionsData);
-    gzip.write(jsonBackupData);
-    gzip.end();
-
-    await client.close();
-
-    return NextResponse.json({ message: "Backup created successfully" });
-  } catch (error) {
-    console.error("Error during backup:", error);
-    await client.close();
-    return NextResponse.json({ message: "Backup failed" }, { status: 500 });
-  }
+  return NextResponse.json({ message: "good" });
 }
 
 export async function GET() {

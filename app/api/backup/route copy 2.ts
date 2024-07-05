@@ -29,10 +29,6 @@ if (!fs.existsSync(BACKUP_DIR)) {
   fs.mkdirSync(BACKUP_DIR);
 }
 
-interface CollectionsData {
-  [key: string]: any[]; // Assuming all collections have arrays of any type of documents
-}
-
 export async function POST() {
   const date = new Date().toISOString().slice(0, 10);
   const backupPath = path.join(BACKUP_DIR, `${DB_NAME}-${date}.gz`);
@@ -48,12 +44,7 @@ export async function POST() {
     const gzip = zlib.createGzip();
 
     output.on("close", () => {
-      console.log(
-        `Backup file size: ${(
-          fs.statSync(backupPath).size /
-          (1024 * 1024)
-        ).toFixed(2)} MB`
-      );
+      console.log("Backup file size:", fs.statSync(backupPath).size);
       console.log("Backup created successfully");
     });
 
@@ -63,15 +54,12 @@ export async function POST() {
 
     gzip.pipe(output);
 
-    const collectionsData: CollectionsData = {};
-
     for (const collection of collections) {
       const documents = await collection.find({}).toArray();
-      collectionsData[collection.collectionName] = documents;
+      const collectionData = JSON.stringify(documents);
+      gzip.write(collectionData);
     }
 
-    const jsonBackupData = JSON.stringify(collectionsData);
-    gzip.write(jsonBackupData);
     gzip.end();
 
     await client.close();

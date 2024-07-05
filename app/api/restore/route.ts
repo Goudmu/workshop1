@@ -1,43 +1,114 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { exec } from "child_process";
-import path from "path";
 import fs from "fs";
+import path from "path";
+import zlib from "zlib";
+import { MongoClient, ObjectId } from "mongodb";
+import { promisify } from "util";
 import { NextResponse } from "next/server";
 
 const BACKUP_DIR = path.join(process.cwd(), "backups");
 const DB_NAME = process.env.DB_NAME || "mydatabase";
-const MONGODB_URI = process.env.MONGODB_URI2 || "";
-const USERNAME = process.env.MONGODB_USERNAME || "";
-const PASSWORD = process.env.MONGODB_PASSWORD || "";
+const MONGODB_URI = process.env.MONGODB_URI || "";
 
-if (!MONGODB_URI || !USERNAME || !PASSWORD) {
+if (!MONGODB_URI) {
   throw new Error(
-    "Please define MONGODB_URI, MONGODB_USERNAME, and MONGODB_PASSWORD environment variables inside .env.local"
+    "Please define MONGODB_URI environment variable inside .env.local"
   );
 }
 
-// Ensure the backup directory exists
-if (!fs.existsSync(BACKUP_DIR)) {
-  fs.mkdirSync(BACKUP_DIR);
+const gunzipAsync = promisify(zlib.gunzip);
+
+interface BackUpFileInfo {
+  name: string;
+  fullPath: string;
+  sizeInBytes: number;
+  createdAt: Date;
 }
 
 export async function POST() {
-  const date = new Date().toISOString().slice(0, 10);
-  const backupPath = path.join(BACKUP_DIR, `${DB_NAME}-${date}.gz`);
+  const backupPath = path.join(BACKUP_DIR, "workshop1-2024-07-05.gz");
 
-  // Construct the mongodump command
-  const command = `mongorestore --uri="${MONGODB_URI}" --gzip --archive=${backupPath}`;
+  const client = new MongoClient(MONGODB_URI);
 
-  exec(command, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error creating backup: ${stderr}`);
-      return NextResponse.json({ message: "Backup failed", error: stderr });
+  try {
+    await client.connect();
+    const db = client.db(DB_NAME);
+
+    // Read compressed data from file
+    const compressedData = await fs.promises.readFile(backupPath);
+
+    // Decompress data
+    const jsonData = await gunzipAsync(compressedData);
+
+    // Parse JSON data
+    const collectionsData = JSON.parse(jsonData.toString());
+
+    // Restore data into respective collections
+    for (const collectionName in collectionsData) {
+      if (
+        Object.prototype.hasOwnProperty.call(collectionsData, collectionName)
+      ) {
+        const documents = collectionsData[collectionName];
+        const collection = db.collection(collectionName);
+
+        // Insert documents with ObjectId for _id and convert debits and credits arrays
+        for (const document of documents) {
+          try {
+            // Convert _id to ObjectId if it's a string
+            if (typeof document._id === "string") {
+              document._id = ObjectId.createFromHexString(document._id);
+            }
+
+            // Convert date string to Date object with time set to 00:00:00.000
+            if (typeof document.date === "string") {
+              document.date = new Date(document.date.substring(0, 10)); // Assuming date is in ISO format
+            }
+
+            // Convert debits and credits arrays
+            if (Array.isArray(document.debits)) {
+              document.debits.forEach((debit: any) => {
+                if (typeof debit._id === "string") {
+                  debit._id = ObjectId.createFromHexString(debit._id);
+                }
+              });
+            }
+
+            if (Array.isArray(document.credits)) {
+              document.credits.forEach((credit: any) => {
+                if (typeof credit._id === "string") {
+                  credit._id = ObjectId.createFromHexString(credit._id);
+                }
+              });
+            }
+
+            // Insert document into collection
+            await collection.insertOne(document);
+            console.log(`Inserted document with _id: ${document._id}`);
+          } catch (error: any) {
+            // Handle duplicate key error
+            if (error.code === 11000) {
+              console.warn(
+                `Skipping duplicate document with _id: ${document._id}`
+              );
+            } else {
+              throw error;
+            }
+          }
+        }
+
+        console.log(
+          `Restored ${documents.length} documents into ${collectionName}`
+        );
+      }
     }
-    console.log(`Restore Completed at ${backupPath}`);
+
     return NextResponse.json({
-      message: "Restore Completed",
+      message: "Restore completed successfully",
       path: backupPath,
     });
-  });
-  return NextResponse.json({ message: "Restore Completed", path: backupPath });
+  } catch (error) {
+    console.error("Error during restore:", error);
+    throw error;
+  } finally {
+    await client.close();
+  }
 }

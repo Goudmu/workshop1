@@ -15,6 +15,9 @@ export const GetGeneralLedgerData = async ({ startDate, endDate }: any) => {
       date: { $gte: start, $lte: end },
     }).lean();
 
+    const generalLedger = await GeneralLedger.find({ type: "jurnalumum" });
+    console.log(generalLedger);
+
     newGeneralLedger = newGeneralLedger.map((entry: IGeneralLedger) => {
       entry._id = entry._id?.toString();
       entry.debits.map((dataDebit: any) => {

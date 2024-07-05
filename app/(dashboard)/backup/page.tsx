@@ -56,6 +56,26 @@ const BackupPage = () => {
     }
   };
 
+  const restoreHandler = async () => {
+    setMessage("Starting Restore...");
+    try {
+      const response = await fetch("/api/restore", {
+        method: "POST",
+      });
+
+      if (!response.ok) {
+        const result = await response.json();
+        setMessage(`Restore failed: ${result.error}`);
+        return;
+      }
+
+      const { message } = await response.json();
+      setMessage(`Restore successful: ${message}`);
+    } catch (error: any) {
+      setMessage(`Restore failed: ${error.message}`);
+    }
+  };
+
   useEffect(() => {
     getBackupsData();
   }, []);
@@ -86,13 +106,15 @@ const BackupPage = () => {
                   {file.fullPath}
                 </TableCell>
                 <TableCell className="text-right">
-                  {(file.sizeInBytes / (1024 * 1024)).toFixed(2)} MB
+                  {(file.sizeInBytes / 1024).toFixed(2)} KB
                 </TableCell>
                 <TableCell className="hidden md:table-cell text-muted-foreground">
                   {new Date(file.createdAt).toLocaleString()}
                 </TableCell>
                 <TableCell className="hidden md:table-cell text-muted-foreground">
-                  <Button size="sm">Restore</Button>
+                  <Button size="sm" onClick={restoreHandler}>
+                    Restore
+                  </Button>
                 </TableCell>
                 <TableCell className="hidden md:table-cell text-muted-foreground">
                   <Button
