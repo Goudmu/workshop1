@@ -20,15 +20,18 @@ export const getIncomeAccount = async () => {
   }
 };
 
-export const getLabaRugiData = async () => {
+export const getLabaRugiData = async ({ startDate, endDate }: any) => {
   try {
     await connectToDB();
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
     let incomeAccount = await Account.find({
       accountID: { $regex: "^[45]" },
     });
 
     const generalLedgerData = await GeneralLedger.find({
-      // date: { $gte: start, $lte: end },
+      date: { $gte: start, $lte: end },
       type: "jurnalumum",
       $or: [
         { "debits.accountID": { $regex: "^[45]" } },
