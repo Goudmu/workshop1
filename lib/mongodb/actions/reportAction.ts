@@ -57,7 +57,6 @@ export const getLabaRugiData = async () => {
             if (modifiedDataAcc.balance === "debit") {
               modifiedDataAcc.amount += dataDebit.amount;
             } else {
-              modifiedDataAcc.amount -= dataDebit.amount;
             }
           }
         });
@@ -75,6 +74,7 @@ export const getLabaRugiData = async () => {
 
       return modifiedDataAcc;
     });
+
     return { incomeAccountFix };
   } catch (error) {
     console.log(error);

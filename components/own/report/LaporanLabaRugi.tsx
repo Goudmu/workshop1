@@ -7,9 +7,33 @@ import {
 } from "@/components/ui/card";
 import { IAccount } from "@/lib/mongodb/models/Account";
 import { capitalizeFirstLetter } from "@/lib/utils";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const LaporanLabaRugi = ({ incomeAccount }: { incomeAccount: IAccount[] }) => {
+  const [total, setTotal] = useState({ grossPL: 0, costPL: 0 });
+
+  const getTotal = () => {
+    let newTotal = {
+      grossPL: 0,
+      costPL: 0,
+    };
+
+    incomeAccount.map((dataAcc) => {
+      if (dataAcc.accountID.substring(0, 1) == "4") {
+        newTotal.grossPL += dataAcc.amount;
+      } else {
+        newTotal.costPL += dataAcc.amount;
+      }
+      return dataAcc;
+    });
+
+    setTotal(newTotal);
+  };
+
+  useEffect(() => {
+    getTotal();
+  }, [incomeAccount]);
+
   return (
     <div className=" w-full">
       <Card>
@@ -28,7 +52,13 @@ const LaporanLabaRugi = ({ incomeAccount }: { incomeAccount: IAccount[] }) => {
                     return (
                       <div className="flex justify-between" key={index}>
                         <span>{capitalizeFirstLetter(dataAccount.name)}</span>
-                        <span>
+                        <span
+                          className={`${
+                            dataAccount.accountID.substring(0, 1) == "4"
+                              ? " text-green-500"
+                              : " text-red-500"
+                          } font-bold`}
+                        >
                           {new Intl.NumberFormat("id", {
                             style: "currency",
                             currency: "IDR",
@@ -43,12 +73,18 @@ const LaporanLabaRugi = ({ incomeAccount }: { incomeAccount: IAccount[] }) => {
             <div className="grid gap-2">
               <div className="flex justify-between font-semibold">
                 <span>Net Income</span>
-                <span>
+                <span
+                  className={`${
+                    total.grossPL - total.costPL > 0
+                      ? " text-green-500"
+                      : " text-red-500"
+                  } font-bold`}
+                >
                   {new Intl.NumberFormat("id", {
                     style: "currency",
                     currency: "IDR",
                     maximumFractionDigits: 0,
-                  }).format(0)}
+                  }).format(total.grossPL - total.costPL)}
                 </span>
               </div>
             </div>

@@ -13,7 +13,6 @@ const ReportPage = () => {
 
   const getDataIncomeAccount = async () => {
     const { incomeAccountFix }: any = await getLabaRugiData();
-    console.log(incomeAccountFix);
     setincomeAccount(incomeAccountFix);
   };
 
