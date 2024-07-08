@@ -60,7 +60,7 @@ export async function POST() {
 
             // Convert date string to Date object with time set to 00:00:00.000
             if (typeof document.date === "string") {
-              document.date = new Date(document.date.substring(0, 10)); // Assuming date is in ISO format
+              document.date = new Date(document.date); // Assuming date is in ISO format
             }
 
             // Convert debits and credits arrays

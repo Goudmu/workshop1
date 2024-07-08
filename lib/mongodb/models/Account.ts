@@ -5,6 +5,7 @@ export interface IAccount extends Document {
   name: string;
   balance: "debit" | "credit";
   amount: number;
+  income: number;
 }
 
 const AccountSchema: Schema = new Schema({
