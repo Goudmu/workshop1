@@ -3,7 +3,11 @@ import { NextResponse } from "next/server";
 import { connectToDB } from "../utils/connect";
 import GeneralLedger, { IGeneralLedger } from "../models/GeneralLedger";
 
-export const GetGeneralLedgerData = async ({ startDate, endDate }: any) => {
+export const GetGeneralLedgerData = async ({
+  startDate,
+  endDate,
+  type,
+}: any) => {
   try {
     await connectToDB();
     const start = new Date(startDate);
@@ -13,10 +17,10 @@ export const GetGeneralLedgerData = async ({ startDate, endDate }: any) => {
 
     newGeneralLedger = await GeneralLedger.find({
       date: { $gte: start, $lte: end },
+      type,
     }).lean();
 
-    const generalLedger = await GeneralLedger.find({ type: "jurnalumum" });
-    console.log(generalLedger);
+    // const generalLedger = await GeneralLedger.find({ type: "jurnalumum" });
 
     newGeneralLedger = newGeneralLedger.map((entry: IGeneralLedger) => {
       entry._id = entry._id?.toString();

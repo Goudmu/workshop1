@@ -29,7 +29,7 @@ import { capitalizeFirstLetter, sortAccountsByID, uuidToId } from "@/lib/utils";
 import { toast } from "@/components/ui/use-toast";
 import { IAccount } from "@/lib/mongodb/models/Account";
 
-const FormJurnalumum = ({ trigger, setTrigger }: any) => {
+const FormJurnalumum = ({ trigger, setTrigger, typeJournal }: any) => {
   const [entries, setEntries] = useState([
     {
       id: 1,
@@ -105,7 +105,7 @@ const FormJurnalumum = ({ trigger, setTrigger }: any) => {
         description: entries[0].description,
         debits,
         credits,
-        type: "jurnalumum",
+        type: typeJournal,
       }),
     });
     if (res.ok) {

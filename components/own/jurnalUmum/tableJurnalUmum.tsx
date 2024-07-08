@@ -25,7 +25,11 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { GetGeneralLedgerData } from "@/lib/mongodb/actions/generalLedgerAction";
 
-export default function TableJurnalUmum() {
+export default function TableJurnalUmum({
+  typeJournal,
+}: {
+  typeJournal: string;
+}) {
   const [startDate, setStartDate] = useState<Date | undefined>(() => {
     const now = new Date();
     const endOfDay = new Date(now);
@@ -53,6 +57,7 @@ export default function TableJurnalUmum() {
       const newgeneralLedger = await GetGeneralLedgerData({
         startDate,
         endDate,
+        type: typeJournal,
       });
 
       if (newgeneralLedger != undefined) {
@@ -89,7 +94,11 @@ export default function TableJurnalUmum() {
 
   return (
     <div className="grid gap-8">
-      <FormJurnalumum setTrigger={setTrigger} trigger={trigger} />
+      <FormJurnalumum
+        setTrigger={setTrigger}
+        trigger={trigger}
+        typeJournal={typeJournal}
+      />
       <div className="flex items-center gap-2">
         <Popover>
           <PopoverTrigger asChild>
