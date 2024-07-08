@@ -83,3 +83,66 @@ export const getLabaRugiData = async ({ startDate, endDate }: any) => {
     console.log(error);
   }
 };
+export const getNeracaData = async ({ startDate, endDate }: any) => {
+  try {
+    await connectToDB();
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    let neracaAccount = await Account.find({
+      accountID: { $regex: "^[123]" },
+    });
+
+    const generalLedgerData = await GeneralLedger.find({
+      date: { $gte: start, $lte: end },
+      type: "jurnalumum",
+      $or: [
+        { "debits.accountID": { $regex: "^[123]" } },
+        { "credits.accountID": { $regex: "^[123]" } },
+      ],
+    });
+
+    let neracaAccountFix = neracaAccount.map((dataAcc) => {
+      // Convert ObjectId to string
+      const dataAccIdString = dataAcc._id.toString();
+
+      // Initialize a plain object to store the modified account
+      let modifiedDataAcc = {
+        _id: dataAccIdString,
+        accountID: dataAcc.accountID,
+        name: dataAcc.name,
+        balance: dataAcc.balance,
+        amount: dataAcc.amount,
+        __v: dataAcc.__v,
+      };
+
+      // Process debits and credits
+      generalLedgerData.forEach((dataGL) => {
+        dataGL.debits.forEach((dataDebit: any) => {
+          if (dataDebit.account_id === dataAccIdString) {
+            if (modifiedDataAcc.balance === "debit") {
+              modifiedDataAcc.amount += dataDebit.amount;
+            } else {
+            }
+          }
+        });
+
+        dataGL.credits.forEach((dataCredit: any) => {
+          if (dataCredit.account_id === dataAccIdString) {
+            if (modifiedDataAcc.balance === "debit") {
+              modifiedDataAcc.amount -= dataCredit.amount;
+            } else {
+              modifiedDataAcc.amount += dataCredit.amount;
+            }
+          }
+        });
+      });
+
+      return modifiedDataAcc;
+    });
+
+    return { neracaAccountFix };
+  } catch (error) {
+    console.log(error);
+  }
+};

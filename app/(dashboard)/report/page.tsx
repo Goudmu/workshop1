@@ -1,6 +1,7 @@
 "use client";
 
 import LaporanLabaRugi from "@/components/own/report/LaporanLabaRugi";
+import LaporanNeraca from "@/components/own/report/LaporanNeraca";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -11,6 +12,7 @@ import {
 import {
   getIncomeAccount,
   getLabaRugiData,
+  getNeracaData,
 } from "@/lib/mongodb/actions/reportAction";
 import { IAccount } from "@/lib/mongodb/models/Account";
 import { CalendarDaysIcon } from "lucide-react";
@@ -30,6 +32,7 @@ const ReportPage = () => {
     return endOfDay;
   });
   const [incomeAccount, setincomeAccount] = useState<IAccount[]>([]);
+  const [neracaAccount, setneracaAccount] = useState<IAccount[]>([]);
 
   const startDateHandler = (e: any) => {
     setStartDate(e);
@@ -46,12 +49,21 @@ const ReportPage = () => {
     setincomeAccount(incomeAccountFix);
   };
 
+  const getDataNeraca = async () => {
+    const { neracaAccountFix }: any = await getNeracaData({
+      startDate,
+      endDate,
+    });
+    setneracaAccount(neracaAccountFix);
+  };
+
   const filterHandler = () => {
     getDataIncomeAccount();
+    getDataNeraca();
   };
 
   useEffect(() => {
-    getDataIncomeAccount();
+    filterHandler();
   }, []);
 
   return (
@@ -100,6 +112,7 @@ const ReportPage = () => {
         <Button onClick={filterHandler}>Filter</Button>
       </div>
       <LaporanLabaRugi incomeAccount={incomeAccount} />
+      <LaporanNeraca neracaAccount={neracaAccount} />
     </div>
   );
 };
