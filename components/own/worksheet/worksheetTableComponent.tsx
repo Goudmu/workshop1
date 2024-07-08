@@ -180,16 +180,25 @@ export default function WorksheetTableComponent() {
     settotalCreditledgerClosing(newtotalCreditclosingEntries);
 
     // ADD RETAINED EARNING TO NERACA
-    newtotalCreditNeraca += newtotalCreditReportRL - newtotalDebitReportRL;
+    newtotalDebitNeraca += newtotalDebitadjustEntries - newtotalCreditReportRL;
+
+    newtotalCreditNeraca +=
+      newtotalCreditReportRL -
+      newtotalDebitReportRL +
+      newtotalDebitadjustEntries -
+      newtotalCreditReportRL;
 
     settotalDebitledgerEntries(newtotalDebitledgerEntries);
     settotalCreditledgerEntries(newtotalCreditledgerEntries);
     settotalDebitledgerAdjust(newtotalDebitadjustEntries);
     settotalCreditledgerAdjust(newtotalCreditadjustEntries);
-    settotalDebitReportRL(newtotalDebitReportRL);
-    settotalCreditReportRL(newtotalCreditReportRL);
+    settotalDebitReportRL(newtotalDebitReportRL - newtotalDebitadjustEntries);
+    settotalCreditReportRL(newtotalCreditReportRL + newtotalCreditReportRL);
     settotalCreditRetainedEarning(
-      newtotalCreditReportRL - newtotalDebitReportRL
+      newtotalCreditReportRL -
+        newtotalDebitReportRL +
+        newtotalDebitadjustEntries -
+        newtotalCreditReportRL
     );
     settotalDebitNeraca(newtotalDebitNeraca);
     settotalCreditNeraca(newtotalCreditNeraca);
@@ -411,10 +420,12 @@ export default function WorksheetTableComponent() {
                             currency: "IDR",
                             maximumFractionDigits: 0,
                           }).format(
-                            ["4", "5"].includes(
+                            ["5"].includes(
                               dataAccount.accountID.substring(0, 1)
                             )
-                              ? debitGLAmount
+                              ? debitGLAmount +
+                                  debitAdjustAmount -
+                                  creditAdjustAmount
                               : 0
                           )}
                         </TableCell>
@@ -424,10 +435,12 @@ export default function WorksheetTableComponent() {
                             currency: "IDR",
                             maximumFractionDigits: 0,
                           }).format(
-                            ["4", "5"].includes(
+                            ["4"].includes(
                               dataAccount.accountID.substring(0, 1)
                             )
-                              ? creditGLAmount
+                              ? creditGLAmount -
+                                  debitAdjustAmount +
+                                  creditAdjustAmount
                               : 0
                           )}
                         </TableCell>
@@ -438,10 +451,12 @@ export default function WorksheetTableComponent() {
                             currency: "IDR",
                             maximumFractionDigits: 0,
                           }).format(
-                            ["4", "5", "3"].includes(
+                            ["4"].includes(
                               dataAccount.accountID.substring(0, 1)
                             )
-                              ? debitClosingAmount
+                              ? debitClosingAmount -
+                                  debitAdjustAmount +
+                                  creditAdjustAmount
                               : 0
                           )}
                         </TableCell>
@@ -451,10 +466,12 @@ export default function WorksheetTableComponent() {
                             currency: "IDR",
                             maximumFractionDigits: 0,
                           }).format(
-                            ["4", "5", "3"].includes(
+                            ["5"].includes(
                               dataAccount.accountID.substring(0, 1)
                             )
-                              ? creditClosingAmount
+                              ? creditClosingAmount +
+                                  debitAdjustAmount -
+                                  creditAdjustAmount
                               : 0
                           )}
                         </TableCell>
@@ -468,7 +485,10 @@ export default function WorksheetTableComponent() {
                             ["1"].includes(
                               dataAccount.accountID.substring(0, 1)
                             ) || dataAccount.accountID === "3300"
-                              ? debitGLAmount - creditGLAmount
+                              ? debitGLAmount -
+                                  creditGLAmount +
+                                  debitAdjustAmount -
+                                  creditAdjustAmount
                               : 0
                           )}
                         </TableCell>
