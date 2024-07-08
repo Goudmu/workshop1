@@ -44,10 +44,11 @@ const LaporanNeraca = ({ neracaAccount }: { neracaAccount: IAccount[] }) => {
     <div className=" w-full">
       <Card>
         <CardHeader>
-          <CardTitle>Income Statement</CardTitle>
+          <CardTitle>Balance Statement</CardTitle>
           <CardDescription></CardDescription>
         </CardHeader>
         <CardContent>
+          {/* ASSET */}
           <div className="grid gap-4">
             <div className="grid gap-2">
               {neracaAccount &&
@@ -58,15 +59,7 @@ const LaporanNeraca = ({ neracaAccount }: { neracaAccount: IAccount[] }) => {
                     return (
                       <div className="flex justify-between" key={index}>
                         <span>{capitalizeFirstLetter(dataAccount.name)}</span>
-                        <span
-                          className={`${
-                            ["1", "2"].includes(
-                              dataAccount.accountID.substring(0, 1)
-                            )
-                              ? " text-green-500"
-                              : " text-red-500"
-                          } font-bold`}
-                        >
+                        <span>
                           {new Intl.NumberFormat("id", {
                             style: "currency",
                             currency: "IDR",
@@ -75,19 +68,34 @@ const LaporanNeraca = ({ neracaAccount }: { neracaAccount: IAccount[] }) => {
                         </span>
                       </div>
                     );
-                  } else {
+                  }
+                })}
+            </div>
+
+            <div className="grid gap-2">
+              <div className="flex justify-between font-semibold">
+                <span>Total Asset</span>
+                <span
+                  className={` text-green-500
+                   font-bold`}
+                >
+                  {new Intl.NumberFormat("id", {
+                    style: "currency",
+                    currency: "IDR",
+                    maximumFractionDigits: 0,
+                  }).format(total.totalAsset)}
+                </span>
+              </div>
+            </div>
+            {/* EQUITY AND LIABILITY */}
+            <div className="grid gap-2">
+              {neracaAccount &&
+                neracaAccount.map((dataAccount, index) => {
+                  if (["3"].includes(dataAccount.accountID.substring(0, 1))) {
                     return (
                       <div className="flex justify-between" key={index}>
                         <span>{capitalizeFirstLetter(dataAccount.name)}</span>
-                        <span
-                          className={`${
-                            ["1", "2"].includes(
-                              dataAccount.accountID.substring(0, 1)
-                            )
-                              ? " text-green-500"
-                              : " text-red-500"
-                          } font-bold`}
-                        >
+                        <span>
                           {new Intl.NumberFormat("id", {
                             style: "currency",
                             currency: "IDR",
@@ -104,19 +112,6 @@ const LaporanNeraca = ({ neracaAccount }: { neracaAccount: IAccount[] }) => {
                 })}
             </div>
             <div className="grid gap-2">
-              <div className="flex justify-between font-semibold">
-                <span>Total Asset</span>
-                <span
-                  className={` text-green-500
-                   font-bold`}
-                >
-                  {new Intl.NumberFormat("id", {
-                    style: "currency",
-                    currency: "IDR",
-                    maximumFractionDigits: 0,
-                  }).format(total.totalAsset)}
-                </span>
-              </div>
               <div className="flex justify-between font-semibold">
                 <span>Total Liability and Equity</span>
                 <span
