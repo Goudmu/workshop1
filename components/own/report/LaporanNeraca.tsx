@@ -53,9 +53,7 @@ const LaporanNeraca = ({ neracaAccount }: { neracaAccount: IAccount[] }) => {
             <div className="grid gap-2">
               {neracaAccount &&
                 neracaAccount.map((dataAccount, index) => {
-                  if (
-                    ["1", "2"].includes(dataAccount.accountID.substring(0, 1))
-                  ) {
+                  if (["1"].includes(dataAccount.accountID.substring(0, 1))) {
                     return (
                       <div className="flex justify-between" key={index}>
                         <span>{capitalizeFirstLetter(dataAccount.name)}</span>
@@ -71,14 +69,10 @@ const LaporanNeraca = ({ neracaAccount }: { neracaAccount: IAccount[] }) => {
                   }
                 })}
             </div>
-
             <div className="grid gap-2">
               <div className="flex justify-between font-semibold">
                 <span>Total Asset</span>
-                <span
-                  className={` text-green-500
-                   font-bold`}
-                >
+                <span className={`font-bold`}>
                   {new Intl.NumberFormat("id", {
                     style: "currency",
                     currency: "IDR",
@@ -91,7 +85,9 @@ const LaporanNeraca = ({ neracaAccount }: { neracaAccount: IAccount[] }) => {
             <div className="grid gap-2">
               {neracaAccount &&
                 neracaAccount.map((dataAccount, index) => {
-                  if (["3"].includes(dataAccount.accountID.substring(0, 1))) {
+                  if (
+                    ["2", "3"].includes(dataAccount.accountID.substring(0, 1))
+                  ) {
                     return (
                       <div className="flex justify-between" key={index}>
                         <span>{capitalizeFirstLetter(dataAccount.name)}</span>
@@ -114,10 +110,7 @@ const LaporanNeraca = ({ neracaAccount }: { neracaAccount: IAccount[] }) => {
             <div className="grid gap-2">
               <div className="flex justify-between font-semibold">
                 <span>Total Liability and Equity</span>
-                <span
-                  className={` text-red-500
-                   font-bold`}
-                >
+                <span className={`font-bold`}>
                   {new Intl.NumberFormat("id", {
                     style: "currency",
                     currency: "IDR",

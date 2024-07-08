@@ -46,19 +46,19 @@ const LaporanLabaRugi = ({ incomeAccount }: { incomeAccount: IAccount[] }) => {
             <div className="grid gap-2">
               {incomeAccount &&
                 incomeAccount.map((dataAccount, index) => {
-                  if (
-                    ["4", "5"].includes(dataAccount.accountID.substring(0, 1))
-                  ) {
-                    return (
-                      <div className="flex justify-between" key={index}>
+                  return (
+                    <div className="flex justify-between" key={index}>
+                      <div className=" w-[75%]">
                         <span>{capitalizeFirstLetter(dataAccount.name)}</span>
-                        <span
-                          className={`${
-                            dataAccount.accountID.substring(0, 1) == "4"
-                              ? " text-green-500"
-                              : " text-red-500"
-                          } font-bold`}
-                        >
+                      </div>
+                      <div
+                        className={` w-[25%] ${
+                          dataAccount.accountID.substring(0, 1) == "4"
+                            ? ""
+                            : "text-end"
+                        }`}
+                      >
+                        <span>
                           {new Intl.NumberFormat("id", {
                             style: "currency",
                             currency: "IDR",
@@ -66,20 +66,14 @@ const LaporanLabaRugi = ({ incomeAccount }: { incomeAccount: IAccount[] }) => {
                           }).format(dataAccount.amount)}
                         </span>
                       </div>
-                    );
-                  }
+                    </div>
+                  );
                 })}
             </div>
             <div className="grid gap-2">
               <div className="flex justify-between font-semibold">
                 <span>Net Income</span>
-                <span
-                  className={`${
-                    total.grossPL - total.costPL > 0
-                      ? " text-green-500"
-                      : " text-red-500"
-                  } font-bold`}
-                >
+                <span className={` font-bold`}>
                   {new Intl.NumberFormat("id", {
                     style: "currency",
                     currency: "IDR",

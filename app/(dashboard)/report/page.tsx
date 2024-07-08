@@ -1,5 +1,6 @@
 "use client";
 
+import LoadingComponent from "@/components/own/loading";
 import LaporanLabaRugi from "@/components/own/report/LaporanLabaRugi";
 import LaporanNeraca from "@/components/own/report/LaporanNeraca";
 import { Button } from "@/components/ui/button";
@@ -33,6 +34,7 @@ const ReportPage = () => {
   });
   const [incomeAccount, setincomeAccount] = useState<IAccount[]>([]);
   const [neracaAccount, setneracaAccount] = useState<IAccount[]>([]);
+  const [isLoading, setisLoading] = useState(true);
 
   const startDateHandler = (e: any) => {
     setStartDate(e);
@@ -55,9 +57,11 @@ const ReportPage = () => {
       endDate,
     });
     setneracaAccount(neracaAccountFix);
+    setisLoading(false);
   };
 
   const filterHandler = () => {
+    setisLoading(true);
     getDataIncomeAccount();
     getDataNeraca();
   };
@@ -66,10 +70,20 @@ const ReportPage = () => {
     filterHandler();
   }, []);
 
+  if (isLoading) {
+    return (
+      <div className=" w-full flex items-center justify-center h-screen">
+        <LoadingComponent />
+      </div>
+    );
+  }
+
   return (
-    <div className=" flex flex-col justify-center items-center gap-10">
-      <div>
-        <h1>Report Page</h1>
+    <div className=" flex flex-col gap-8 my-5">
+      <div className=" w-full text-center">
+        <h1 className=" font-bold text-xl sm:text-2xl md:text-3xl">
+          Report Page
+        </h1>
       </div>
       <div className="flex items-center gap-2">
         <Popover>
