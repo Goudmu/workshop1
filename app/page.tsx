@@ -1,7 +1,12 @@
+import SessionProviderComp from "@/components/own/sessionProviderComp";
+import LoginComponent from "@/components/own/user/loginForm";
+
 export default function Home() {
   return (
     <main>
-      <h1>HELLO</h1>
+      <SessionProviderComp>
+        <LoginComponent />
+      </SessionProviderComp>
     </main>
   );
 }

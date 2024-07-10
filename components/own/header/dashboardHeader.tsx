@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -6,6 +7,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
@@ -41,7 +43,9 @@ const DashboardHeaderOwnComponent = () => {
             {data.name}
           </Link>
         ))}
-        {/* <Button onClick={() => signOut()}>Sign Out</Button> */}
+        <span onClick={() => signOut()} className=" cursor-pointer">
+          Sign Out
+        </span>
       </nav>
       <div className=" md:hidden">
         <Sheet>
@@ -66,7 +70,7 @@ const DashboardHeaderOwnComponent = () => {
                   {data.name}
                 </Link>
               ))}
-              {/* <Button onClick={() => signOut()}>Sign Out</Button> */}
+              <Button onClick={() => signOut()}>Sign Out</Button>
             </div>
           </SheetContent>
         </Sheet>
