@@ -48,5 +48,6 @@ export const formatDate = (date: Date): string => {
 };
 
 export const getDayName = (date: Date, locale: string): string => {
-  return date.toLocaleDateString(locale, { weekday: "long" });
+  const newDate = new Date(date);
+  return newDate.toLocaleDateString(locale, { weekday: "long" });
 };
