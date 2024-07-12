@@ -1,7 +1,6 @@
 "use server";
 
 import { IchartData } from "@/app/(dashboard)/dashboard/page";
-import Account from "../models/Account";
 import GeneralLedger, { IGeneralLedger } from "../models/GeneralLedger";
 import { connectToDB } from "../utils/connect";
 import { formatDate } from "@/lib/utils";
@@ -13,10 +12,6 @@ export const getLabaRugiData = async () => {
     start.setDate(start.getDate() - 6);
     start.setHours(0, 0, 0, 0);
     const end = new Date();
-
-    let incomeAccount = await Account.find({
-      accountID: { $regex: "^[45]" },
-    });
 
     const generalLedgerData = await GeneralLedger.find({
       date: { $gte: start, $lte: end },

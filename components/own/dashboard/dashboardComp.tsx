@@ -27,6 +27,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const DashboardComp = ({ chartData }: { chartData: any }) => {
+  console.log(chartData);
   if (chartData == null) {
     return <LoadingComponent />;
   }
@@ -35,7 +36,7 @@ const DashboardComp = ({ chartData }: { chartData: any }) => {
       <BarChart accessibilityLayer data={chartData}>
         <CartesianGrid vertical={false} />
         <XAxis
-          dataKey="month"
+          dataKey="day"
           tickMargin={10}
           tickFormatter={(value) => value.slice(0, 3)}
         />
