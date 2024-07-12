@@ -1,5 +1,6 @@
 import FormExpenses from "@/components/own/expenses/formExpense";
 import TableExpense from "@/components/own/expenses/tableExpense";
+import RefreshClient from "@/components/own/refreshClient";
 import {
   AccountForExpenses,
   getExpense,
@@ -23,6 +24,9 @@ const ExpensePage = async () => {
 
   return (
     <div className="container mx-auto px-4 md:px-6 py-8 flex flex-col gap-10">
+      <div>
+        <RefreshClient />
+      </div>
       <div>
         <FormExpenses expenses={expenses} cashAccount={cashAccount} />
       </div>

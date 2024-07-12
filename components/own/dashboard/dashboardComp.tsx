@@ -32,10 +32,7 @@ const DashboardComp = () => {
 
   const getData = async () => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_HOST_URL}/api/dashboard`,
-        { cache: "no-store" }
-      );
+      const res = await fetch(`/api/dashboard`, { cache: "no-store" });
       let { chartData } = await res.json();
       chartData = chartData?.map((dataChart: any) => {
         let modifiedData = {

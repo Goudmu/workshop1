@@ -38,6 +38,7 @@ import { toast } from "@/components/ui/use-toast";
 import { TrashIcon } from "@/lib/icon/icon";
 import { IAccount } from "@/lib/mongodb/models/Account";
 import AlertDelete from "../alertDelete";
+import { useRouter } from "next/navigation";
 
 export default function TableAndFormAccountComponent() {
   const [accounts, setAccounts] = useState<IAccount[]>([]);
@@ -47,6 +48,7 @@ export default function TableAndFormAccountComponent() {
     balance: "debit",
     amount: 0,
   });
+  const router = useRouter();
 
   const getData = async () => {
     const res = await fetch("/api/account?id=", { cache: "no-store" });
@@ -81,6 +83,8 @@ export default function TableAndFormAccountComponent() {
     } catch (error: any) {
       console.log(error);
       throw new Error(error);
+    } finally {
+      router.refresh();
     }
     setNewAccount({
       accountID: "",
