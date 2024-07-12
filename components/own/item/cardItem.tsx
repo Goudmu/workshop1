@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { revalidateAll } from "@/lib/action";
 
 const CardItemComponent = ({
   items = [],
@@ -111,6 +112,8 @@ const CardItemComponent = ({
         toast({
           title: `One Item ${itemUpdate.name} has been Sold`,
         });
+        // VERCEL
+        await revalidateAll();
         router.push("/jurnalumum");
       }
     } catch (error) {

@@ -65,9 +65,9 @@ const TableServices = ({
         toast({
           title: "Item Berhasil Ditambahkan",
         });
-        router.push("/jurnalumum");
         // VERCEL
         await revalidateAll();
+        router.push("/jurnalumum");
       }
     } catch (error) {
       console.log(error);
