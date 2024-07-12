@@ -39,7 +39,6 @@ import { TrashIcon } from "@/lib/icon/icon";
 import { IAccount } from "@/lib/mongodb/models/Account";
 import AlertDelete from "../alertDelete";
 import { useRouter } from "next/navigation";
-import revalidateAllPath from "@/lib/action";
 
 export default function TableAndFormAccountComponent() {
   const [accounts, setAccounts] = useState<IAccount[]>([]);
@@ -80,7 +79,6 @@ export default function TableAndFormAccountComponent() {
         toast({
           title: "Akun Berhasil Ditambahkan",
         });
-        await revalidateAllPath();
       }
     } catch (error: any) {
       console.log(error);

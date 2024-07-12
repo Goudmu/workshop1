@@ -1,5 +1,6 @@
 import Account from "@/lib/mongodb/models/Account";
 import { connectToDB } from "@/lib/mongodb/utils/connect";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest) => {
@@ -25,6 +26,8 @@ export const POST = async (req: NextRequest) => {
     await connectToDB();
     const { accountID, name, balance, amount } = await req.json();
     const account = await Account.create({ accountID, name, balance, amount });
+
+    revalidatePath("/api/expenses");
     return NextResponse.json({ account });
   } catch (error: any) {
     console.log(error);
