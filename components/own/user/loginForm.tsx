@@ -45,7 +45,7 @@ const SignIn = () => {
 
   if (session == null || session == undefined) {
     return (
-      <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6">
+      <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 w-fit">
         <h2 className="text-2xl font-bold mb-4">Login</h2>
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>

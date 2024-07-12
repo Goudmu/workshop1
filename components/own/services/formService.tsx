@@ -1,5 +1,9 @@
 "use client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
   Card,
@@ -18,32 +22,52 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
-import { useRouter } from "next/navigation";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+const formSchema = z.object({
+  name: z.string().min(1, {
+    message: "Username must be at least 2 characters.",
+  }),
+  description: z.string().min(1, {
+    message: "Username must be at least 2 characters.",
+  }),
+  price: z.coerce.number().min(0, {
+    message: "Username must be at least 2 characters.",
+  }),
+});
 
 const FormServices = () => {
-  const [newService, setnewService] = useState({
-    description: "",
-    name: "",
-    price: 0,
+  const newServiceForm = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      price: 0,
+    },
   });
+
   const router = useRouter();
-  const handleInputChange = (e: any) => {
-    setnewService({
-      ...newService,
-      [e.target.name]: e.target.value,
-    });
-  };
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+  const isLoading = newServiceForm.formState.isSubmitting;
+
+  const newServiceFormSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const res = await fetch("/api/service", {
         method: "POST",
-        body: JSON.stringify(newService),
+        body: JSON.stringify(values),
       });
       if (res.ok) {
         toast({
           title: "Service Berhasil Ditambahkan",
         });
+        newServiceForm.reset();
       }
     } catch (error: any) {
       console.log(error);
@@ -51,11 +75,6 @@ const FormServices = () => {
     } finally {
       router.refresh();
     }
-    setnewService({
-      description: "",
-      name: "",
-      price: 0,
-    });
   };
 
   return (
@@ -71,44 +90,74 @@ const FormServices = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="grid gap-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
-                    <Input
-                      id="name"
+              <Form {...newServiceForm}>
+                <form
+                  onSubmit={newServiceForm.handleSubmit(newServiceFormSubmit)}
+                  className="grid gap-4"
+                >
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={newServiceForm.control}
                       name="name"
-                      type="text"
-                      value={newService.name}
-                      onChange={handleInputChange}
-                      required
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Username</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Input Name of Service"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            This is your name of service.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="description">Description</Label>
-                    <Input
-                      id="description"
+                    <FormField
+                      control={newServiceForm.control}
                       name="description"
-                      type="text"
-                      value={newService.description}
-                      onChange={handleInputChange}
-                      required
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Description</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Input Description of Service"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            This is your description of service.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="price">Price</Label>
-                    <Input
-                      id="price"
+                    <FormField
+                      control={newServiceForm.control}
                       name="price"
-                      type="number"
-                      value={newService.price}
-                      onChange={handleInputChange}
-                      required
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Price</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Input Price of Service"
+                              {...field}
+                              type="number"
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            This is your price of service.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
                   </div>
-                </div>
-                <Button type="submit">Add Service</Button>
-              </form>
+                  <Button type="submit">Submit</Button>
+                </form>
+              </Form>
             </CardContent>
           </Card>
         </AccordionContent>

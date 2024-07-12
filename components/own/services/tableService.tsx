@@ -77,21 +77,23 @@ const TableServices = ({
           <TableHead>Name</TableHead>
           <TableHead className="hidden md:table-cell">Desc</TableHead>
           <TableHead className="text-right">Price</TableHead>
-          <TableHead className="hidden md:table-cell">Action</TableHead>
+          <TableHead className="text-right">Action</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {services &&
           services.map((data, index) => (
             <TableRow key={index}>
-              <TableCell className="font-medium">{data.name}</TableCell>
+              <TableCell className="font-medium capitalize">
+                {data.name}
+              </TableCell>
               <TableCell className="hidden md:table-cell text-muted-foreground">
                 {data.description}
               </TableCell>
               <TableCell className="text-right">
                 {IDRFormat(data.price)}
               </TableCell>
-              <TableCell className="hidden md:table-cell text-muted-foreground">
+              <TableCell className="text-right text-muted-foreground">
                 <Button onClick={() => addService(data)} variant="outline">
                   Add This Service
                 </Button>
