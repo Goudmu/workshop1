@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { IAccount } from "@/lib/mongodb/models/Account";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
+import { revalidateAll } from "@/lib/action";
 
 const TableServices = ({
   services,
@@ -65,6 +66,8 @@ const TableServices = ({
           title: "Item Berhasil Ditambahkan",
         });
         router.push("/jurnalumum");
+        // VERCEL
+        await revalidateAll();
       }
     } catch (error) {
       console.log(error);

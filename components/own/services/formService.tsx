@@ -69,8 +69,6 @@ const FormServices = () => {
           title: "Service Berhasil Ditambahkan",
         });
         newServiceForm.reset();
-        // VERCEL
-        await revalidateAll();
       }
     } catch (error: any) {
       console.log(error);
