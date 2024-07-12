@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   ChartContainer,
   ChartLegend,
@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import LoadingComponent from "../loading";
+import { getDayName } from "@/lib/utils";
 
 const chartConfig = {
   service: {
@@ -26,8 +27,37 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const DashboardComp = ({ chartData }: { chartData: any }) => {
-  console.log(chartData);
+const DashboardComp = () => {
+  const [chartData, setchartData] = useState(null);
+
+  const getData = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_HOST_URL}/api/dashboard`,
+        { cache: "no-store" }
+      );
+      let { chartData } = await res.json();
+      chartData = chartData?.map((dataChart: any) => {
+        let modifiedData = {
+          day: dataChart.day,
+          service: dataChart.service,
+          retail: dataChart.retail,
+          expense: dataChart.expense,
+        };
+        modifiedData.day = getDayName(modifiedData.day, "id-ID");
+
+        return modifiedData;
+      });
+      setchartData(chartData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   if (chartData == null) {
     return <LoadingComponent />;
   }

@@ -11,8 +11,10 @@ export const GET = async () => {
     await connectToDB();
     const start = new Date();
     start.setDate(start.getDate() - 6);
-    start.setHours(0, 0, 0, 0);
+    start.setUTCHours(0, 0, 0, 0); // Ensure start of day in UTC
+
     const end = new Date();
+    end.setUTCHours(23, 59, 59, 999); // Ensure end of day in UTC
 
     const generalLedgerData = await GeneralLedger.find({
       date: { $gte: start, $lte: end },
@@ -48,7 +50,11 @@ export const GET = async () => {
         retail: dataChart.retail,
         expense: dataChart.expense,
       };
+      console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
       generalLedgerData.map((dataGL: IGeneralLedger) => {
+        console.log(formatDate(dataGL.date));
+        console.log(formatDate(modifiedData.day));
+        console.log("=======================================");
         if (formatDate(dataGL.date) == formatDate(modifiedData.day)) {
           dataGL.debits.map((dataDebit) => {
             if (dataDebit.accountID == "4100") {
