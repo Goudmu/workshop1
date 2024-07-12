@@ -27,7 +27,6 @@ export const POST = async (req: NextRequest) => {
     const { accountID, name, balance, amount } = await req.json();
     const account = await Account.create({ accountID, name, balance, amount });
 
-    revalidatePath("/api/expenses");
     return NextResponse.json({ account });
   } catch (error: any) {
     console.log(error);
