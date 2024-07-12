@@ -39,3 +39,14 @@ export function IDRFormat(num: number) {
   }).format(num);
   return converted;
 }
+
+export const formatDate = (date: Date): string => {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
+
+export const getDayName = (date: Date, locale: string): string => {
+  return date.toLocaleDateString(locale, { weekday: "long" });
+};
