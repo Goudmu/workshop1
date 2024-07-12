@@ -28,6 +28,7 @@ import { v4 as uuidv4 } from "uuid";
 import { capitalizeFirstLetter, sortAccountsByID, uuidToId } from "@/lib/utils";
 import { toast } from "@/components/ui/use-toast";
 import { IAccount } from "@/lib/mongodb/models/Account";
+import { revalidateAll } from "@/lib/action";
 
 const FormJurnalumum = ({ trigger, setTrigger, typeJournal }: any) => {
   const [entries, setEntries] = useState([
@@ -123,6 +124,8 @@ const FormJurnalumum = ({ trigger, setTrigger, typeJournal }: any) => {
           amount: 0,
         },
       ]);
+      // VERCEL
+      await revalidateAll();
     }
   };
   //   if (accounts.length == 0) {

@@ -2,6 +2,7 @@
 
 import { revalidatePath, revalidateTag } from "next/cache";
 
-export default async function revalidateAllPath() {
+export async function revalidateAll() {
   revalidatePath("/api/expenses");
+  revalidatePath("/api/dashboard");
 }

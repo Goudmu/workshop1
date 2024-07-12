@@ -31,6 +31,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { revalidateAll } from "@/lib/action";
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -68,6 +69,8 @@ const FormServices = () => {
           title: "Service Berhasil Ditambahkan",
         });
         newServiceForm.reset();
+        // VERCEL
+        await revalidateAll();
       }
     } catch (error: any) {
       console.log(error);

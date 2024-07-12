@@ -28,6 +28,7 @@ import { useRouter } from "next/navigation";
 import { IAccount } from "@/lib/mongodb/models/Account";
 import { capitalizeFirstLetter } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
+import { revalidateAll } from "@/lib/action";
 
 const FormExpenses = ({
   expenses,
@@ -100,6 +101,8 @@ const FormExpenses = ({
         toast({
           title: "Expense Berhasil Ditambahkan",
         });
+        // VERCEL
+        await revalidateAll();
         router.push("/jurnalumum");
       }
     } catch (error: any) {

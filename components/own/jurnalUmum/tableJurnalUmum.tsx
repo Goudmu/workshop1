@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { GetGeneralLedgerData } from "@/lib/mongodb/actions/generalLedgerAction";
+import { revalidateAll } from "@/lib/action";
 
 export default function TableJurnalUmum({
   typeJournal,
@@ -85,6 +86,8 @@ export default function TableJurnalUmum({
       if (res.ok) {
         setTrigger(!trigger);
         toast({ title: "The Ledger Has Deleted" });
+        // VERCEL
+        await revalidateAll();
       }
     } catch (error: any) {
       console.log(error);
