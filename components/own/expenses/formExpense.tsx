@@ -30,10 +30,10 @@ import { capitalizeFirstLetter } from "@/lib/utils";
 import { useToast } from "@/components/ui/use-toast";
 
 const FormExpenses = ({
-  // expenses,
+  expenses,
   cashAccount,
 }: {
-  // expenses: IAccount[];
+  expenses: IAccount[];
   cashAccount: IAccount;
 }) => {
   const [newExpenseTransaction, setnewExpenseTransaction] = useState({
@@ -41,28 +41,28 @@ const FormExpenses = ({
     name: "",
     price: 0,
   });
-
-  // COBA GET DATA DI CLIENT
-  const [expenses, setexpenses] = useState<IAccount[]>([]);
   const { toast } = useToast();
   const router = useRouter();
 
-  const getexpensesData = async () => {
-    try {
-      const res = await fetch(`/api/expenses`, {
-        cache: "no-store",
-      });
-      const { expenses } = await res.json();
-      setexpenses(expenses);
-    } catch (error: any) {
-      console.log(error);
-      throw new Error(error);
-    }
-  };
+  // COBA GET DATA DI CLIENT
+  // const [expenses, setexpenses] = useState<IAccount[]>([]);
 
-  useEffect(() => {
-    getexpensesData();
-  }, []);
+  // const getexpensesData = async () => {
+  //   try {
+  //     const res = await fetch(`/api/expenses`, {
+  //       cache: "no-store",
+  //     });
+  //     const { expenses } = await res.json();
+  //     setexpenses(expenses);
+  //   } catch (error: any) {
+  //     console.log(error);
+  //     throw new Error(error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   getexpensesData();
+  // }, []);
 
   const handleInputChange = (e: any) => {
     const { name, value, type } = e.target;
