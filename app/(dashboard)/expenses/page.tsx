@@ -7,6 +7,10 @@ import {
 } from "@/lib/mongodb/actions/expenseAction";
 import React from "react";
 
+export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
 const getExpensesAccount = async () => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_URL}api/expenses`, {
     cache: "no-store",
