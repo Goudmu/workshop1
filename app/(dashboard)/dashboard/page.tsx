@@ -1,5 +1,6 @@
 import DashboardCard from "@/components/own/dashboard/dashboardCard";
 import DashboardComp from "@/components/own/dashboard/dashboardComp";
+import LoadingComponent from "@/components/own/loading";
 import { getDayName, WIBOptions } from "@/lib/utils";
 import React from "react";
 
@@ -35,7 +36,10 @@ const getData = async () => {
 };
 
 const DashboardPage = async () => {
-  const { chartData, incomeAccount }: any = await getData();
+  const { chartData, incomeAccount } = (await getData()) ?? {
+    chartData: null,
+    incomeAccount: null,
+  };
   const start = new Date();
   start.setDate(start.getDate() - 6);
   start.setHours(start.getHours() + 7); // Convert to WIB (UTC+7)
@@ -67,6 +71,9 @@ const DashboardPage = async () => {
   const startFormatted: string = formatDateInWIB(start);
   const endFormatted: string = formatDateInWIB(end);
 
+  if (chartData == null || incomeAccount == null) {
+    return <LoadingComponent />;
+  }
   return (
     <div className=" flex flex-col w-full justify-center items-center gap-10 ">
       <div className=" w-full text-center">
