@@ -27,33 +27,33 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const DashboardComp = () => {
-  const [chartData, setchartData] = useState(null);
+const DashboardComp = ({ chartData }: { chartData: any }) => {
+  // const [chartData, setchartData] = useState(null);
 
-  const getData = async () => {
-    try {
-      const res = await fetch(`/api/dashboard`, { cache: "no-store" });
-      let { chartData } = await res.json();
-      chartData = chartData?.map((dataChart: any) => {
-        let modifiedData = {
-          day: dataChart.day,
-          service: dataChart.service,
-          retail: dataChart.retail,
-          expense: dataChart.expense,
-        };
-        modifiedData.day = getDayName(modifiedData.day, "id-ID");
+  // const getData = async () => {
+  //   try {
+  //     const res = await fetch(`/api/dashboard`, { cache: "no-store" });
+  //     let { chartData } = await res.json();
+  //     chartData = chartData?.map((dataChart: any) => {
+  //       let modifiedData = {
+  //         day: dataChart.day,
+  //         service: dataChart.service,
+  //         retail: dataChart.retail,
+  //         expense: dataChart.expense,
+  //       };
+  //       modifiedData.day = getDayName(modifiedData.day, "id-ID");
 
-        return modifiedData;
-      });
-      setchartData(chartData);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //       return modifiedData;
+  //     });
+  //     setchartData(chartData);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  useEffect(() => {
-    getData();
-  }, []);
+  // useEffect(() => {
+  //   getData();
+  // }, []);
 
   if (chartData == null) {
     return <LoadingComponent />;

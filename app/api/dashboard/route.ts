@@ -1,4 +1,5 @@
 import { IchartData } from "@/app/(dashboard)/dashboard/page";
+import Account from "@/lib/mongodb/models/Account";
 import GeneralLedger, {
   IGeneralLedger,
 } from "@/lib/mongodb/models/GeneralLedger";
@@ -15,6 +16,10 @@ export const GET = async () => {
 
     const end = new Date();
     end.setUTCHours(23, 59, 59, 999); // Ensure end of day in UTC
+
+    let incomeAccount = await Account.find({
+      accountID: { $regex: "^[45]" },
+    });
 
     const generalLedgerData = await GeneralLedger.find({
       date: { $gte: start, $lte: end },
@@ -50,11 +55,7 @@ export const GET = async () => {
         retail: dataChart.retail,
         expense: dataChart.expense,
       };
-      console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
       generalLedgerData.map((dataGL: IGeneralLedger) => {
-        console.log(formatDate(dataGL.date));
-        console.log(formatDate(modifiedData.day));
-        console.log("=======================================");
         if (formatDate(dataGL.date) == formatDate(modifiedData.day)) {
           dataGL.debits.map((dataDebit) => {
             if (dataDebit.accountID == "4100") {
@@ -80,7 +81,46 @@ export const GET = async () => {
       return modifiedData;
     });
 
-    return NextResponse.json({ chartData });
+    incomeAccount = incomeAccount.map((dataAcc) => {
+      // Convert ObjectId to string
+      const dataAccIdString = dataAcc._id.toString();
+
+      // Initialize a plain object to store the modified account
+      let modifiedDataAcc = {
+        _id: dataAccIdString,
+        accountID: dataAcc.accountID,
+        name: dataAcc.name,
+        balance: dataAcc.balance,
+        amount: dataAcc.amount,
+        __v: dataAcc.__v,
+      };
+
+      // Process debits and credits
+      generalLedgerData.forEach((dataGL) => {
+        dataGL.debits.forEach((dataDebit: any) => {
+          if (dataDebit.account_id === dataAccIdString) {
+            if (modifiedDataAcc.balance === "debit") {
+              modifiedDataAcc.amount += dataDebit.amount;
+            } else {
+            }
+          }
+        });
+
+        dataGL.credits.forEach((dataCredit: any) => {
+          if (dataCredit.account_id === dataAccIdString) {
+            if (modifiedDataAcc.balance === "debit") {
+              modifiedDataAcc.amount -= dataCredit.amount;
+            } else {
+              modifiedDataAcc.amount += dataCredit.amount;
+            }
+          }
+        });
+      });
+
+      return modifiedDataAcc;
+    });
+
+    return NextResponse.json({ chartData, incomeAccount });
   } catch (error) {
     console.log(error);
   }
